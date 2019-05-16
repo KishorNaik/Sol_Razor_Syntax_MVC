@@ -1,0 +1,214 @@
+﻿@using System.Text
+@using Sol_Razor_Syntax.Models
+@using System.Collections.Generic
+
+@inherits InheritanceTestClass
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Razor Syntax</h1>
+
+@*Implicit Razor expressions*@
+
+<h2>@DateTime.Now.ToShortDateString()</h2>
+
+@*-------------------------------------------------------------------------*@
+
+@*Explicit Razor expressions*@
+
+@*Problem Statement*@
+<h2>@DateTime.Now - TimeSpan.FromDays(7) </h2>
+
+@*Solution*@
+<h2>@(DateTime.Now - TimeSpan.FromDays(7))</h2>
+
+@*-------------------------------------------------------------------------*@
+
+@*Expression encoding*@
+
+@("<h2> Hello Razor </h2>")
+
+@Html.Raw("<h2> Hello Razor </h2>")
+
+@*-------------------------------------------------------------------------*@
+
+@*Razor Code Blocks*@
+
+@{
+
+    var userModelObj = new { FirstName = "Kishor", LastName = "Naik" };
+}
+
+<h3>@userModelObj?.FirstName</h3>
+<h3>@userModelObj?.LastName</h3>
+
+@{
+
+    var userModelObj1 = new { FirstName = "Mahesh", LastName = "Naik" };
+
+    <h3>@userModelObj1?.FirstName</h3>
+    <h3>@userModelObj1?.LastName</h3>
+
+    var fullName =
+            new StringBuilder()
+            ?.Append(userModelObj1?.FirstName)
+            ?.Append(" ")
+            ?.Append(userModelObj1?.LastName);
+
+    @*Always use Html Tag while putting data*@
+    <h2>@fullName</h2>
+
+    @: Full Name : @fullName
+
+}
+
+@*-------------------------------------------------------------------------*@
+
+@*Control structures*@
+
+@{
+
+    var value = 10;
+}
+
+@if (value == 10)
+{
+    <h3>The given value is same</h3>
+}
+else
+{
+    <h3>The given value is not same</h3>
+}
+
+@switch (value)
+{
+    case 10:
+        <h2>The given value is same</h2>
+        break;
+}
+
+@*-------------------------------------------------------------------------*@
+
+@*For Loop*@
+
+@{
+
+    var userListObj = new List<UserModel>()
+{
+        new UserModel()
+        {
+            FirstName="Kishor",
+            LastName="Naik"
+        },
+        new UserModel()
+        {
+            FirstName="Mahesh",
+            LastName="Naik"
+        },
+        new UserModel()
+        {
+            FirstName="Sharmila",
+            LastName="Naik"
+        }
+    };
+}
+
+<ul>
+    @foreach (var userModelObj2 in userListObj)
+    {
+        <li>@(userModelObj2.FirstName)  @(userModelObj2.LastName)</li>
+    }
+</ul>
+
+@*-------------------------------------------------------------------------*@
+
+@*Using Directive*@
+
+@using (TestClass testObj = new TestClass())
+{
+
+    var getName = testObj?.GetName();
+
+    <h3>@getName</h3>
+
+}
+
+@*-------------------------------------------------------------------------*@
+
+@*Exception Handling*@
+
+@try
+{
+    int value1 = 10;
+
+    int result = value1 / 0;
+
+}
+catch (Exception ex)
+{
+    <div style="background-color: red">
+        @ex.Message
+    </div>
+}
+finally
+{
+    <div>
+        Finally block call
+    </div>
+}
+
+@*-------------------------------------------------------------------------*@
+
+@*Inheritance Base Class Calling *@
+
+@{
+
+    <h2>@base.GetName()</h2>
+
+}
+
+@*-------------------------------------------------------------------------*@
+
+@* Function *@
+
+@functions{
+
+    public String GetFullName() => "Kishor Naik";
+}
+
+<h3>@GetFullName()</h3>
+
+@*-------------------------------------------------------------------------*@
+
+@* Section *@
+
+<div id="divObj"></div>
+
+@section Scripts{
+
+    <script type="text/javascript" lang="javascript">
+
+        document.getElementById("divObj").innerHTML = "Hello Javascript";
+    </script>
+}
+
+@*-------------------------------------------------------------------------*@
+
+@* Templated Razor delegates *@
+
+@{
+
+    Func<String, Object> DisplayName =@<div>@item</div>;
+
+Func<UserModel, Object> DisplayUserModelData =@<div>
+
+    <h2>@item.FirstName</h2>
+    <h3>@item.LastName</h3>
+</div>;
+}
+
+@DisplayName("Hello Razor Template")
+
+@DisplayUserModelData(new UserModel() { FirstName = "Kishor", LastName = "Naik" })
